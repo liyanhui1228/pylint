@@ -42,7 +42,6 @@ import sys
 import tokenize
 import warnings
 
-from pylint.config import OptionsProviderMixIn
 from pylint.reporters import diff_string
 from pylint.utils import register_plugins
 from pylint.interfaces import UNDEFINED
@@ -69,7 +68,7 @@ def table_lines_from_stats(stats, old_stats, columns):
     return lines
 
 
-class BaseChecker(OptionsProviderMixIn):
+class BaseChecker(object):
     """base class for checkers"""
     # checker name (you may reuse an existing one)
     name = None
@@ -83,15 +82,6 @@ class BaseChecker(OptionsProviderMixIn):
     reports = ()
     # mark this checker as enabled or not.
     enabled = True
-
-    def __init__(self, linter=None):
-        """checker instances should have the linter as argument
-
-        linter is an object implementing ILinter
-        """
-        self.name = self.name.lower()
-        OptionsProviderMixIn.__init__(self)
-        self.linter = linter
 
     def add_message(self, msg_id, line=None, node=None, args=None, confidence=UNDEFINED,
                     col_offset=None):
@@ -115,8 +105,12 @@ class BaseTokenChecker(BaseChecker):
         raise NotImplementedError()
 
 
-def initialize(linter):
-    """initialize linter with checkers in this package """
+def initialize(registry):
+    """Register the checkers in this package.
+
+    Args:
+        registry (CheckerRegistry): The registry to register checkers with.
+    """
     register_plugins(linter, __path__[0])
 
 __all__ = ('BaseChecker', 'initialize')
