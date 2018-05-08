@@ -300,6 +300,10 @@ class TestCheckSpace(CheckerTestCase):
         with self.assertNoMessages():
             self.checker.process_tokens(_tokenize_str("(arg: Tuple[\n    int, str] = None):\n"))
 
+        with self.assertNoMessages():
+            self.checker.process_tokens(_tokenize_str(
+                '(foo: List[[A, Dict],\n           B[Dict]] = None)\n'))
+
     def testOperatorSpacingGood(self):
         good_cases = [
             'a = b\n'

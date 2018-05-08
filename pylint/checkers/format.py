@@ -677,7 +677,7 @@ class FormatChecker(BaseTokenChecker):
                 bracket_level += 1
             elif token[1] == '[':
                 bracket_level -= 1
-            elif token[1] == ',':
+            elif token[1] in (',', '\n'):
                 if not bracket_level:
                     return False
             elif token[1] == '.':
